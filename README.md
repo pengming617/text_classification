@@ -1,4 +1,4 @@
-data包中train.txt为训练语料  train_fasttext.txt为fasttext的训练语料
+data包中train_sentiment.txt为训练语料  train_fasttext.txt为fasttext的训练语料
 
 model包下为文本分类的模型
 
