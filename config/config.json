@@ -1,0 +1,62 @@
+{
+"model":{
+    "textcnn":{"model_name": "textcnn",
+               "model_parameters": {"embedding_dim": 128,
+                                    "filter_sizes": "1,2,3",
+                                    "num_filters": 128,
+                                    "dropout_keep_prob": 0.5,
+                                    "l2_reg_lambda": 0.01
+                                   }},
+
+
+    "charcnn": {
+        "model_name": "charcnn",
+        "model_parameters": {
+            "embedding_dim": 256,
+            "dropout_keep_prob": 0.5,
+            "conv_layers": [[256, 5, 3],[256, 5, 3],[256, 1, 0],[256, 1, 0],[256, 1, 0],[256, 1, 3]],
+            "fully_layers": [512, 512]
+            }},
+
+    "fasttext":{"model_name": "fasttext"},
+
+    "textrnn":{"model_name": "textrnn",
+               "model_parameters": {"embedding_dim": 100,
+                                    "dropout_keep_prob": 0.5,
+                                    "hidden_num": 100,
+                                    "hidden_size": 1,
+                                    "l2_reg_lambda": 0.001
+                                    }},
+
+    "birnn_attention":{"model_name": "birnn_attention",
+                       "model_parameters": {"embedding_dim": 256,
+                                            "dropout_keep_prob": 0.5,
+                                            "hidden_num": 100,
+                                            "attn_size": 100
+                                            }},
+
+    "han":{"model_name": "han",
+           "model_parameters": {"embedding_dim": 256,
+                                "dropout_keep_prob": 0.5,
+                                "word_hiddencell": 100,
+                                "sentence_hiddencell": 100,
+                                "word_attention_size": 100,
+                                "sentence_attention_size": 100
+                                }},
+
+    "leam":{"model_name": "leam",
+            "model_parameters": {"embedding_dim": 256,
+                                 "dropout_keep_prob": 0.5,
+                                 "hidden_num": 200,
+                                 "attn_size": 200,
+                                 "l2_reg_lambda": 0.01
+                                 }},
+
+    "transformer":{"model_name": "transformer",
+                   "model_parameters": {"embedding_dim": 256,
+                                        "dropout_keep_prob": 0.3,
+                                        "hidden_num": 256,
+                                        "num_blocks": 6,
+                                        "num_heads": 8
+                                        }}
+}}
