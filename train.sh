@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python3 train.py --model_type=transformer
+python3 train.py --model_type=leam
