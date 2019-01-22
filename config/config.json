@@ -29,8 +29,8 @@
                                     }},
 
     "birnn_attention":{"model_name": "birnn_attention",
-                       "model_parameters": {"embedding_dim": 256,
-                                            "dropout_keep_prob": 0.5,
+                       "model_parameters": {"embedding_dim": 200,
+                                            "dropout_keep_prob": 0.3,
                                             "hidden_num": 100,
                                             "attn_size": 100
                                             }},

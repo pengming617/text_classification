@@ -37,7 +37,7 @@ class Processing(object):
                 # 不进行分词
                 char_word = []
                 for x in words:
-                    if re.search('[a-zA-Z]', x):
+                    if re.search('[a-zA-Z]', x) or x.isdigit():
                         char_word.append(x)
                     else:
                         char_word.extend([y for y in x])
