@@ -55,6 +55,8 @@ class TrainModel(object):
                 for time in range(config.epoch):
                     batch_size = config.Batch_Size
                     batches = int(len(X_train) / batch_size) + 1
+                    accuracy_all = []
+                    cost_all = []
                     for x in range(batches):
                         if x != batches-1:
                             trainX_batch = X_train[x * batch_size:(x + 1) * batch_size]
@@ -70,8 +72,11 @@ class TrainModel(object):
                             leam.seq_length: np.array(self.get_length(trainX_batch))
                         }
                         _, cost, accuracy = sess.run([leam.train_op, leam.loss, leam.accuracy], feed_dict)
+                        accuracy_all.append(accuracy)
+                        cost_all.append(cost)
 
-                    print("第"+str((time+1))+"次迭代的损失为："+str(cost)+";准确率为："+str(accuracy))
+                    print("第"+str((time+1))+"次迭代的损失为："+str(np.mean(np.array(cost_all)))+";准确率为："
+                          + str(np.mean(np.array(accuracy_all))))
 
                     def dev_step(dev_x, dev_y):
                         """
@@ -85,7 +90,7 @@ class TrainModel(object):
                         }
                         dev_cost, dev_accuracy, predictions = sess.run([leam.loss, leam.accuracy, leam.predictions], feed_dict)
                         y_true = [np.nonzero(x)[0][0] for x in dev_y]
-                        f1 = f1_score(np.array(y_true), predictions, average='micro')
+                        f1 = f1_score(np.array(y_true), predictions, average='weighted')
                         print("验证集：loss {:g}, acc {:g}, f1 {:g}\n".format(dev_cost, dev_accuracy, f1))
                         return dev_cost, dev_accuracy
 
