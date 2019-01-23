@@ -1,6 +1,7 @@
 import tensorflow as tf
 import math
 import numpy as np
+from tensorflow.python.ops import array_ops
 
 
 class LEAM(object):
@@ -47,7 +48,10 @@ class LEAM(object):
         logit_label = tf.layers.dense(label_emb, num_classes)
         label_loss = tf.losses.softmax_cross_entropy(onehot_labels=class_y, logits=logit_label)
 
-        self.loss = 0.7 * self.cost + 0.3 * label_loss
+        self.focal_loss = self.get_focal_loss(self.score, tf.cast(self.input_y, tf.float32))
+
+        self.loss = 0.4 * self.cost + 0.3 * label_loss + 0.3 * self.focal_loss
+
         tvars = tf.trainable_variables()
         grads, _ = tf.clip_by_global_norm(tf.gradients(self.loss, tvars), 5)
 
@@ -68,7 +72,7 @@ class LEAM(object):
         G = tf.einsum('ijk,kl->ijl', sent_encoder, tran_label_emb)
 
         G = tf.expand_dims(G, -1)
-        fliter_w = tf.Variable(tf.random_uniform(shape=(5, 1, 1, 1), dtype=tf.float32))
+        fliter_w = tf.Variable(tf.random_uniform(shape=(8, 1, 1, 1), dtype=tf.float32))
         max_G = tf.nn.relu(tf.nn.conv2d(G, filter=fliter_w, strides=[1, 1, 1, 1], padding='SAME'))
         max_G = tf.squeeze(max_G, -1)
 
@@ -86,3 +90,17 @@ class LEAM(object):
     def mask(self, inputs, seq_len, max_len):
         mask = tf.cast(tf.sequence_mask(seq_len, maxlen=max_len), tf.float32)
         return inputs - (1 - mask) * 1e12
+
+    def get_focal_loss(self, prediction_tensor, target_tensor, weights=None, alpha=0.75, gamma=2):
+        # sigmoid_p = tf.nn.sigmoid(prediction_tensor)
+        sigmoid_p = prediction_tensor
+
+        zeros = array_ops.zeros_like(sigmoid_p, dtype=sigmoid_p.dtype)
+
+        # For poitive prediction, only need consider front part loss, back part is 0;
+        # target_tensor > zeros <=> z=1, so poitive coefficient = z - p.
+        pos_p_sub = array_ops.where(target_tensor > zeros, target_tensor - sigmoid_p, zeros)
+
+        my_entry_cross = - alpha * (pos_p_sub ** gamma) * tf.log(tf.clip_by_value(sigmoid_p, 1e-8, 1.0))
+
+        return tf.reduce_mean(my_entry_cross)
