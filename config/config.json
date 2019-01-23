@@ -2,9 +2,9 @@
 "model":{
     "textcnn":{"model_name": "textcnn",
                "model_parameters": {"embedding_dim": 128,
-                                    "filter_sizes": "1,3,5",
+                                    "filter_sizes": "1,2,3",
                                     "num_filters": 128,
-                                    "dropout_keep_prob": 0.5,
+                                    "dropout_keep_prob": 0.3,
                                     "l2_reg_lambda": 0.01
                                    }},
 

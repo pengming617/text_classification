@@ -24,7 +24,7 @@ class TrainModel(object):
 
             with tf.name_scope("readfile"):
                 processing = Processing.Processing()
-                articles, tags = processing.loadPracticeFile("data/train.txt")
+                articles, tags = processing.loadPracticeFile("data/train_sentiment.txt")
                 self.data_embedding_new, self.tags_new = processing.embedding(articles, tags, config.is_cut)
                 X_train, X_val, y_train, y_val = train_test_split(
                     self.data_embedding_new, self.tags_new, test_size=0.1, random_state=0)

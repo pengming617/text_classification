@@ -1,11 +1,22 @@
 import tensorflow as tf
+from sklearn.metrics import f1_score
+import numpy as np
 
 
-tf.app.flags.DEFINE_string("model_type", "charcnn", "默认为cnn")
-tf.app.flags.DEFINE_string("sentence", "微信可以登录吗", "默认为cnn")
+tf.app.flags.DEFINE_string("model_type", "transformer", "默认为cnn")
 FLAGS = tf.app.flags.FLAGS
 model_type = FLAGS.model_type
-sentences = FLAGS.sentence
+
+with open("data/test_sentiment.txt", 'r', encoding='utf-8') as fr:
+    articles = []
+    tags = []
+    for line in fr.readlines():
+        data = line.replace("\t\t", "\t").replace("\n", "").split("\t")
+        if len(data) == 3:
+            articles.append(data[1].replace("，", ","))
+            tags.append(data[2])
+        else:
+            print(line + "------格式错误")
 
 infer = None
 if model_type == 'textcnn':
@@ -31,4 +42,8 @@ elif model_type == 'transformer':
     infer = transformer_infer.Infer()
 else:
     print("do not exist this model")
-print(infer.infer([sentences]))
+
+predicts, scores = infer.infer(articles)
+f1 = f1_score(np.array(tags), np.array(predicts), average='micro')
+print("evaluate over f1:{}".format(f1))
+

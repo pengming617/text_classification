@@ -50,7 +50,7 @@ class TrainModel(object):
                 # Initialize all variables
                 sess.run(tf.global_variables_initializer())
                 saver = tf.train.Saver()
-                best_acc = 0.0
+                best_f1 = 0.0
 
                 for time in range(config.epoch):
                     batch_size = config.Batch_Size
@@ -90,14 +90,14 @@ class TrainModel(object):
                         }
                         dev_cost, dev_accuracy, predictions = sess.run([leam.loss, leam.accuracy, leam.predictions], feed_dict)
                         y_true = [np.nonzero(x)[0][0] for x in dev_y]
-                        f1 = f1_score(np.array(y_true), predictions, average='weighted')
+                        f1 = f1_score(np.array(y_true), predictions, average='micro')
                         print("验证集：loss {:g}, acc {:g}, f1 {:g}\n".format(dev_cost, dev_accuracy, f1))
-                        return dev_cost, dev_accuracy
+                        return dev_cost, f1
 
-                    dev_cost, dev_accuracy = dev_step(X_val, y_val)
+                    dev_cost, f1 = dev_step(X_val, y_val)
 
-                    if dev_accuracy > best_acc:
-                        best_acc = dev_accuracy
+                    if f1 > best_f1:
+                        best_f1 = f1
                         saver.save(sess, "save_model/leam/birnn_attentionModel.ckpt")
                         print("Saved model success\n")
 
