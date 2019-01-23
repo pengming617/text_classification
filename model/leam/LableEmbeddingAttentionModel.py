@@ -50,7 +50,7 @@ class LEAM(object):
 
         self.focal_loss = self.get_focal_loss(self.score, tf.cast(self.input_y, tf.float32))
 
-        self.loss = 0.4 * self.cost + 0.3 * label_loss + 0.3 * self.focal_loss
+        self.loss = 0.2 * self.cost + 0.4 * label_loss + 0.4 * self.focal_loss
 
         tvars = tf.trainable_variables()
         grads, _ = tf.clip_by_global_norm(tf.gradients(self.loss, tvars), 5)

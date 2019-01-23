@@ -4,7 +4,7 @@
 class Config(object):
 
     def __init__(self):
-        self.Batch_Size = 64
+        self.Batch_Size = 32
         self.epoch = 20
         self.is_cut = False  # 是否对语句进行分词
 
