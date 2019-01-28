@@ -52,13 +52,13 @@ class TrainModel(object):
                 # Initialize all variables
                 sess.run(tf.global_variables_initializer())
                 saver = tf.train.Saver()
-                best_accuray = 0.0
+                best_f1 = 0.0
 
                 for time in range(config.epoch):
                     batch_size = config.Batch_Size
                     batches = int(len(X_train) / batch_size) + 1
-                    cost = 999.99
-                    accuracy = 0.0
+                    accuracy_all = []
+                    cost_all = []
                     for x in range(batches):
                         if x != batches-1:
                             trainX_batch = X_train[x * batch_size:(x + 1) * batch_size]
@@ -73,8 +73,11 @@ class TrainModel(object):
                             muti_head.drop_out_prob: dropout_keep_prob,
                         }
                         _, cost, accuracy = sess.run([muti_head.train_op, muti_head.cost, muti_head.accuracy], feed_dict)
+                        accuracy_all.append(accuracy)
+                        cost_all.append(cost)
 
-                    print("第"+str((time+1))+"次迭代的损失为："+str(cost)+";准确率为："+str(accuracy))
+                    print("第" + str((time + 1)) + "次迭代的损失为：" + str(np.mean(np.array(cost_all))) + ";准确率为："
+                          + str(np.mean(np.array(accuracy_all))))
 
                     def dev_step(dev_x, dev_y):
                         """
@@ -85,15 +88,16 @@ class TrainModel(object):
                             muti_head.input_y: np.array(dev_y),
                             muti_head.drop_out_prob: 0.0,
                         }
-                        dev_cost, dev_accuracy, predictions= sess.run([muti_head.cost, muti_head.accuracy,
-                                                                       muti_head.predictions], feed_dict)
+                        dev_cost, dev_accuracy, predictions = sess.run([muti_head.cost, muti_head.accuracy,
+                                                                        muti_head.predictions], feed_dict)
                         y_true = [np.nonzero(x)[0][0] for x in dev_y]
                         f1_scores = f1_score(np.array(y_true), predictions, average='micro')
                         print("验证集：loss {:g}, acc {:g}, f1 {:g}\n".format(dev_cost, dev_accuracy, f1_scores))
-                        return dev_accuracy
+                        return f1_scores
 
-                    dev_accuracy = dev_step(X_val, y_val)
-                    if dev_accuracy > best_accuray:
-                        best_accuray = dev_accuracy
+                    f1_scores = dev_step(X_val, y_val)
+
+                    if f1_scores > best_f1:
+                        best_f1 = f1_scores
                         saver.save(sess, "save_model/transformer/transformerModel.ckpt")
                         print("saved\n")
