@@ -3,7 +3,7 @@ from sklearn.metrics import f1_score
 import numpy as np
 
 
-tf.app.flags.DEFINE_string("model_type", "leam", "默认为cnn")
+tf.app.flags.DEFINE_string("model_type", "textcnn", "默认为cnn")
 FLAGS = tf.app.flags.FLAGS
 model_type = FLAGS.model_type
 
