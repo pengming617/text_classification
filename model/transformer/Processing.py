@@ -44,6 +44,9 @@ class Processing(object):
                 articlesWords.append(' '.join(char_word))
                 length.append(len(char_word))
             else:
+                # 只保留中文文本
+                re_words = re.compile(u"[\u4e00-\u9fa5]+")
+                words = [word for word in words if re_words.search(word)]
                 articlesWords.append(' '.join(words))
                 length.append(len(words))
         max_length = max(length)
