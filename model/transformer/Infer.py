@@ -2,6 +2,7 @@ import tensorflow.contrib.learn as learn
 import tensorflow as tf
 import numpy as np
 import jieba
+import re
 
 # Misc Parameters
 dicts = {}
@@ -33,6 +34,11 @@ class Infer(object):
                 sentence_word = []
                 for sentence in sentences:
                     words = jieba.cut(sentence)
+
+                    # 只保留中文文本
+                    re_words = re.compile(u"[\u4e00-\u9fa5]+")
+                    words = [word for word in words if re_words.search(word)]
+
                     sentence_word.append(' '.join((list(words))))
                 sentences_vectors = np.array(list(vocab_processor.fit_transform(sentence_word)))
                 # Get the placeholders from the graph by name
