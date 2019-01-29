@@ -56,7 +56,7 @@
                    "model_parameters": {"embedding_dim": 256,
                                         "dropout_keep_prob": 0.3,
                                         "hidden_num": 256,
-                                        "num_blocks": 3,
+                                        "num_blocks": 1,
                                         "num_heads": 8
                                         }}
 }}

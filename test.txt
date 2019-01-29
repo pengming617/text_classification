@@ -1,0 +1,6 @@
+transformer
+
+"embedding_dim": 256,"dropout_keep_prob": 0.3,
+"hidden_num": 256,"num_blocks": 3,
+"num_heads": 8
+f1:0.8449964174826845
