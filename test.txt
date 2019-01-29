@@ -15,4 +15,7 @@ evaluate over f1:0.8734177215189873
 "num_heads": 8
 evaluate over f1:0.8550274659660855
 
-
+"embedding_dim": 256,"dropout_keep_prob": 0.3,
+"hidden_num": 256,"num_blocks": 1,
+"num_heads": 4
+evaluate over f1:0.8466682588965847
